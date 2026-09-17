@@ -12,7 +12,12 @@
 ## 📚 TIL 기록 목록
 
 <!-- TIL_LIST_START -->
-### 💡 2026년 08월
+### 💡 2026년 09월
+
+- 🗓️ **2026.09.17** | 🔗 [[Linux] 필수 핵심 명령어, 파일 권한(chmodumask) 및 입출력·파이프 완전 정복 ](./TIL/2026/09/2026-09-17_[Linux]_필수_핵심_명령어,_파일_권한(chmodumask)_및_입출력·파이프_완전_정복_.md)
+
+<details>
+<summary>📂 2026년 08월 (16개의 기록)</summary>
 
 - 🗓️ **2026.08.27** | 🔗 [[AI] Object Detection 핵심 이론 & Ollama 로컬 LLM 서빙 완벽 가이드](./TIL/2026/08/2026-08-27_[AI]_Object_Detection_핵심_이론_&_Ollama_로컬_LLM_서빙_완벽_가이드.md)
 - 🗓️ **2026.08.26** | 🔗 [[AI] 딥러닝 학습부터 젯슨(Jetson) TensorRT Zero-Copy 실시간 배포까지 End-to-End 파이프라인 완벽 가이드](./TIL/2026/08/2026-08-26_[AI]_딥러닝_학습부터_젯슨(Jetson)_TensorRT_Zero-Copy_실시간_배포까지_End-to-End_파이프라인_완벽_가이드.md)
@@ -30,6 +35,8 @@
 - 🗓️ **2026.08.05** | 🔗 [다형성(Polymorphism)](./TIL/2026/08/2026-08-05_다형성(Polymorphism).md)
 - 🗓️ **2026.08.04** | 🔗 [Class, Instance & Object](./TIL/2026/08/2026-08-04_Class,_Instance_&_Object.md)
 - 🗓️ **2026.08.03** | 🔗 [C와 다른 C++ 기초 지식](./TIL/2026/08/2026-08-03_C와_다른_C++_기초_지식.md)
+
+</details>
 
 <details>
 <summary>📂 2026년 07월 (26개의 기록)</summary>
