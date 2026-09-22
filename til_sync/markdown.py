@@ -555,16 +555,19 @@ class MarkdownRenderer:
         return f'<a id="{anchor}"></a>'
 
     def _table_of_contents(self) -> str:
-        minimum = min((level for level, _, _ in self._headings), default=1)
-        return (
-            "\n".join(
-                "  " * (level - minimum)
-                + "- "
-                + _link(escape_markdown(title).replace("\n", " "), "#" + anchor)
-                for level, title, anchor in self._headings
+        lines = []
+        ancestor_levels = []
+        for level, title, anchor in self._headings:
+            while ancestor_levels and level <= ancestor_levels[-1]:
+                ancestor_levels.pop()
+            # Nest under headings actually encountered. A leading H4 or an
+            # H1 -> H4 jump must not create an indented Markdown code block.
+            label = escape_markdown(title).replace("\n", " ")
+            lines.append(
+                "  " * len(ancestor_levels) + "- " + _link(label, "#" + anchor)
             )
-            or "목차에 표시할 제목이 없습니다."
-        )
+            ancestor_levels.append(level)
+        return "\n".join(lines) or "목차에 표시할 제목이 없습니다."
 
     def _block_url(self, block: dict) -> str:
         identifier = block.get("id", "").replace("-", "")

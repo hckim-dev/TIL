@@ -53,6 +53,8 @@ def is_hosted_embed(url: str) -> bool:
 
 
 class AssetStore:
+    """첨부파일을 저장하며, 직접 만든 HTTP 세션만 종료합니다."""
+
     def __init__(
         self,
         markdown_path: Path,
@@ -63,8 +65,9 @@ class AssetStore:
         self.markdown_path = markdown_path
         self.directory = markdown_path.parent / ASSETS_DIRECTORY / UUID(page_id).hex
         # Notion API Session을 재사용하지 않아 외부 호스트에 토큰을 보내지 않습니다.
-        self.session = session or requests.Session()
-        if session is None:
+        self._owns_session = session is None
+        self.session = requests.Session() if session is None else session
+        if self._owns_session:
             retry = Retry(
                 total=DOWNLOAD_RETRY_COUNT,
                 backoff_factor=DOWNLOAD_BACKOFF_FACTOR,
@@ -84,7 +87,8 @@ class AssetStore:
         exc_value: BaseException | None,
         traceback: TracebackType | None,
     ) -> None:
-        self.session.close()
+        if self._owns_session:
+            self.session.close()
 
     def media_url(self, block: dict, payload: dict) -> str:
         url = (

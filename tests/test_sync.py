@@ -1,12 +1,19 @@
 import tempfile
 import unittest
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 from til_sync.config import Config, FetchMode
 from til_sync.notion import NotionAPIError
-from til_sync.storage import PageStore, sanitize_filename, scan_entries, update_readme
+from til_sync.storage import (
+    PageStore,
+    atomic_write_text,
+    sanitize_filename,
+    scan_entries,
+    update_readme,
+)
 from til_sync.sync import SyncError, main, sync
 
 PAGE_ID = "11111111-1111-1111-1111-111111111111"
@@ -238,6 +245,27 @@ class SyncTests(unittest.TestCase):
 
 
 class StorageTests(unittest.TestCase):
+    def test_temporary_file_close_failure_preserves_original_and_cleans_up(self):
+        create_temporary_file = tempfile.NamedTemporaryFile
+
+        @contextmanager
+        def fail_on_close(**kwargs):
+            with create_temporary_file(**kwargs) as handle:
+                yield handle
+            raise OSError("flush failed")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "page.md"
+            path.write_text("original", encoding="utf-8")
+            with (
+                patch("til_sync.storage.tempfile.NamedTemporaryFile", fail_on_close),
+                self.assertRaisesRegex(OSError, "flush failed"),
+            ):
+                atomic_write_text(path, "replacement")
+            self.assertEqual(path.read_text(encoding="utf-8"), "original")
+            self.assertEqual(list(root.iterdir()), [path])
+
     def test_readme_preserves_custom_text_and_rejects_broken_markers(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

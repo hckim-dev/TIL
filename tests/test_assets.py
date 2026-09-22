@@ -27,6 +27,31 @@ class AssetTests(unittest.TestCase):
             "file": {"url": "https://example.com/image.png?signature=first"},
         }
 
+    def test_borrowed_session_is_not_closed_after_success_or_failure(self):
+        with AssetStore(self.path, PAGE_ID, session=self.session) as store:
+            store.media_url({"id": "block"}, self.payload)
+        self.session.close.assert_not_called()
+
+        self.session.get.side_effect = requests.ConnectionError("network failure")
+        with (
+            self.assertRaises(AssetError),
+            AssetStore(self.path, PAGE_ID, session=self.session) as store,
+        ):
+            store.media_url({"id": "block"}, self.payload)
+        self.session.close.assert_not_called()
+
+    def test_owned_session_is_closed_after_success_or_failure(self):
+        with patch("til_sync.assets.requests.Session", return_value=self.session):
+            with AssetStore(self.path, PAGE_ID) as store:
+                store.media_url({"id": "block"}, self.payload)
+            self.session.close.assert_called_once()
+
+            self.session.reset_mock()
+            self.session.get.side_effect = requests.ConnectionError("network failure")
+            with self.assertRaises(AssetError), AssetStore(self.path, PAGE_ID) as store:
+                store.media_url({"id": "block"}, self.payload)
+            self.session.close.assert_called_once()
+
     def test_signed_url_becomes_stable_relative_asset_and_repeated_reference_cached(
         self,
     ):

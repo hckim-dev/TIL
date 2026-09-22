@@ -49,6 +49,8 @@ Notion API 버전은 `2026-03-11`로 고정했습니다. 기존 database ID에�
 | 회의록                                  | API가 제공하는 요약·메모·대화 기록 섹션                                                    |
 | 경로 표시, API 미지원/새 블록           | 원본 링크와 설명. 제공되는 텍스트·하위 블록은 보존                                         |
 
+코드 블록의 `c`, `python`, `bash`, `verilog` 언어 태그는 그대로 유지하며, `c++`는 `cpp`, `plain text`와 `plaintext`는 `text`로 변환합니다. 그 밖의 언어도 Markdown 언어 태그로 사용할 수 있는 이름이면 유지합니다. 코드 본문의 들여쓰기·특수문자는 그대로 보존하며, Verilog의 백틱 지시문에도 Markdown 이스케이프를 추가하지 않습니다.
+
 Notion 화면과 GitHub Markdown은 표현 방식이 다릅니다. 글자색·배경색·컬럼 너비·임베드의 인터랙션·DB 보기/필터는 재현하지 않습니다. 버튼·폼 등 API가 내용을 제공하지 않는 블록은 원본 링크를 남깁니다. 멘션 대상의 접근 권한이 없으면 API가 제공한 제한된 표시만 사용할 수 있습니다. [Notion 블록 문서](https://developers.notion.com/reference/block), [리치 텍스트 문서](https://developers.notion.com/reference/rich-text).
 
 ## 첨부파일과 파일 보존
@@ -79,20 +81,16 @@ til_sync/
 tests/                 # 네트워크와 토큰 없이 실행하는 회귀 테스트
 ```
 
-GitHub Actions의 Python 버전은 `.python-version`에서 관리합니다(현재 3.12). `requirements.txt`는 실행에 필요한 Requests만 포함하며, 개발용 `requirements-dev.txt`는 여기에 Ruff를 추가합니다. 테스트는 표준 라이브러리 `unittest`를 사용합니다.
-
-VS Code와 CI는 프로젝트의 `ruff.toml`을 사용합니다. 기본 검사 규칙을 유지하면서 import 정리, Python 현대 문법, 오류 가능성 검사도 적용합니다. 검사 대상은 Python 파일이며, 생성된 `TIL/` 문서와 첨부파일은 포맷하지 않습니다. 프로젝트 설정 파일의 적용 방식은 [Ruff 공식 문서](https://docs.astral.sh/ruff/configuration/)를 참고하세요.
+GitHub Actions의 Python 버전은 `.python-version`에서 관리합니다(현재 3.12). 로컬에서도 Python 3.12 이상을 사용하세요. `requirements.txt`로 실행에 필요한 Requests를 설치하며, 테스트는 표준 라이브러리 `unittest`를 사용합니다. 특정 에디터나 포매터를 설치할 필요는 없습니다.
 
 개발 환경에서 검사하려면 다음을 실행합니다.
 
 ```powershell
-python -m pip install -r requirements-dev.txt
-python -m ruff check .
-python -m ruff format --check .
+python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ```
 
-코드 형식을 자동으로 정리할 때는 `python -m ruff format .`을 사용합니다. Python 최소 버전을 변경할 때는 `.python-version`과 `ruff.toml`의 `target-version`을 함께 맞춥니다.
+코드는 PEP 8에 맞춰 공백 4칸 들여쓰기, 함수·변수의 `snake_case`, 클래스의 `PascalCase`, 상수의 `UPPER_SNAKE_CASE`를 사용합니다. 외부 입력·출력 경계와 공개 함수에 타입 힌트를 유지하고, Notion 데이터는 API의 필드 이름을 그대로 사용합니다. 생성된 `TIL/` 문서와 첨부파일은 소스 코드 정리 대상으로 다루지 않습니다.
 
 실행용 패키지만 설치하여 동기화하려면 다음을 사용합니다.
 
@@ -107,7 +105,7 @@ python update_readme.py
 
 환경 변수 `NOTION_PROPERTY_TITLE`, `NOTION_PROPERTY_DATE`로 열 이름을 변경할 수 있으며 기본값은 `제목`, `날짜`입니다. 제목 열 이름이 달라져도 실제 `title` 타입 속성을 찾습니다. 로컬 실행은 현재 디렉터리에 기록하므로 저장소 루트에서 실행하세요. 전체 조회 시 `FETCH_MODE=ALL`로 설정하고 `TARGET_DATE`는 제거합니다. `.env`를 자동으로 읽지는 않습니다.
 
-일간/전체 Actions는 같은 브랜치에서 순서대로 실행합니다. 동기화 전에 테스트를 수행하고, README와 TIL만 커밋합니다. 실제 커밋/푸시 오류는 실패로 표시되며, 원격 변경은 rebase 후 일반 push로 반영합니다. 코드·설정·workflow 변경 시 별도 CI에서 Ruff 검사, 형식 검사, 테스트를 순서대로 실행합니다.
+일간/전체 Actions는 같은 브랜치에서 순서대로 실행합니다. 동기화 전에 테스트를 수행하고, README와 TIL만 커밋합니다. 실제 커밋/푸시 오류는 실패로 표시되며, 원격 변경은 rebase 후 일반 push로 반영합니다. 코드·설정·workflow 변경 시 별도 CI에서 Linux와 Windows의 단위 테스트를 실행하여 파일명·경로·파일 교체 동작을 함께 확인합니다.
 
 ## 설정과 상수를 변경할 때
 

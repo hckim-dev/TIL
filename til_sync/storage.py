@@ -55,18 +55,15 @@ def atomic_write_text(path: Path, content: str) -> bool:
     if path.exists() and path.read_bytes() == data:
         return False
     path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
-        temporary = Path(handle.name)
-        try:
-            handle.write(data)
-        except BaseException:
-            handle.close()
-            temporary.unlink(missing_ok=True)
-            raise
+    temporary: Path | None = None
     try:
-        os.replace(temporary, path)
+        with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
+            temporary = Path(handle.name)
+            handle.write(data)
+        temporary.replace(path)
     finally:
-        temporary.unlink(missing_ok=True)
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
     return True
 
 
@@ -174,8 +171,9 @@ class PageStore:
         title_json = json.dumps(title, ensure_ascii=False).replace(
             "-->", "\\u002d\\u002d>"
         )
+        display_title = title.replace("\n", " ").replace("\r", " ")
         content = (
-            f"# {escape_markdown(title.replace(chr(10), ' ').replace(chr(13), ' '))}\n\n"
+            f"# {escape_markdown(display_title)}\n\n"
             f"> 날짜: {date_str}\n> 원본 노션: [링크]({page_url})\n\n"
             f"<!-- notion-page-id: {page_key} -->\n"
             f"<!-- notion-title: {title_json} -->\n\n---\n\n{body.rstrip()}\n"

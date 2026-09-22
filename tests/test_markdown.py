@@ -160,6 +160,54 @@ class MarkdownRendererTests(unittest.TestCase):
             "````cpp\n" + source + "````\n\n*포인터 예제*\n",
         )
 
+    def test_code_languages_preserve_tags_indentation_and_literal_source(self):
+        cpp_source = (
+            "#include <vector>\n"
+            "void append(std::vector<int>& values) {\n"
+            "    values.push_back(1);\n"
+            "}\n"
+        )
+        plain_source = "  *not emphasis* [label](url)\n\t<raw> & $value\n"
+        cases = [
+            (
+                "c",
+                "c",
+                "#include <stdint.h>\n"
+                "uint8_t read_value(const uint8_t *buffer) {\n"
+                "    return buffer[0] & 0x0F;\n"
+                "}\n",
+            ),
+            ("c++", "cpp", cpp_source),
+            ("cpp", "cpp", cpp_source),
+            (
+                "python",
+                "python",
+                'def describe(values):\n    return f"value={values[0]}_ready"\n',
+            ),
+            (
+                "bash",
+                "bash",
+                'if [ "$status" -eq 0 ]; then\n\tprintf "%s\\n" "$value" # log\nfi\n',
+            ),
+            ("plaintext", "text", plain_source),
+            ("plain text", "text", plain_source),
+            (
+                "verilog",
+                "verilog",
+                "`define WIDTH 8\n"
+                "module counter(input wire clk, output reg [`WIDTH-1:0] count);\n"
+                "    always @(posedge clk) begin\n"
+                "        count <= count + 1'b1;\n"
+                "    end\n"
+                "endmodule\n",
+            ),
+        ]
+        renderer = self.renderer()
+        for language, expected_tag, source in cases:
+            with self.subTest(language=language):
+                result = renderer.render([block("code", source, language=language)])
+                self.assertEqual(result, f"```{expected_tag}\n{source}```\n")
+
     def test_recursive_api_children_columns_toggles_quotes_and_toc(self):
         children = {
             "columns": [block("column", identifier="column", children=[])],
@@ -197,6 +245,25 @@ class MarkdownRendererTests(unittest.TestCase):
         self.assertIn("<summary><strong>레지스터</strong></summary>", result)
         self.assertIn("> 주의\n>\n> 중첩 내용", result)
         self.assertEqual(self.fetches, ["columns", "column", "nested"])
+
+    def test_toc_handles_leading_deep_headings_and_skipped_levels(self):
+        blocks = [block("table_of_contents")]
+        blocks.extend(
+            [
+                block("heading_4", "먼저 나온 상세 내용", identifier="first"),
+                block("heading_1", "주제", identifier="topic"),
+                block("heading_4", "상세 내용", identifier="detail"),
+                block("heading_2", "다음 내용", identifier="next"),
+            ]
+        )
+        result = self.renderer().render(blocks)
+        self.assertEqual(
+            result.split("\n\n", 1)[0],
+            "- [먼저 나온 상세 내용](#notion-first)\n"
+            "- [주제](#notion-topic)\n"
+            "  - [상세 내용](#notion-detail)\n"
+            "  - [다음 내용](#notion-next)",
+        )
 
     def test_tables_keep_first_data_row_when_there_is_no_column_header(self):
         table = block(
