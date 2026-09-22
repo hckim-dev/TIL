@@ -1,26 +1,41 @@
-# [PyQt] Dialog, Signal, Thread, Event
+# \[PyQt\] Dialog, Signal, Thread, Event
 
 > 날짜: 2026-08-13
 > 원본 노션: [링크](https://app.notion.com/p/PyQt-Dialog-Signal-Thread-Event-3bb1d46c18fc807da7ceda80211fef9d)
 
+<!-- notion-page-id: 3bb1d46c18fc807da7ceda80211fef9d -->
+<!-- notion-title: "[PyQt] Dialog, Signal, Thread, Event" -->
+
 ---
 
-## 1. QFileDialog (파일 선택 / 저장 대화상자)
+<a id="notion-3bb1d46c18fc8066a4effedfb031e274"></a>
 
-getOpenFileName(열기)과 getSaveFileName(저장)은 내부 파라미터 구조와 동작 방식이 동일합니다.
+## 1\. QFileDialog (파일 선택 / 저장 대화상자)
+
+`getOpenFileName`(열기)과 `getSaveFileName`(저장)은 내부 파라미터 구조와 동작 방식이 동일합니다.
+
+<a id="notion-3bb1d46c18fc80269deae11ecb5dcfd1"></a>
 
 ### 📌 파라미터 의미
 
-- parent: 부모 위젯 (self)
-- caption: 대화상자 상단 타이틀 (예: "파일 열기")
-- directory: 시작 폴더 경로 (빈 값 "" 지정 시 현재 실행 경로)
-- filter: 파일 확장자 필터 (구분자는 ;; 사용, 예: "Text (*.txt);;All (*)")
-- initialFilter: (선택) 기본으로 선택해 둘 필터 지정
-- options: (선택) 대화상자 옵션 (예: QFileDialog.DontUseNativeDialog)
+- <strong>`parent`</strong>: 부모 위젯 (`self`)
+- <strong>`caption`</strong>: 대화상자 상단 타이틀 (예: `"파일 열기"`)
+- <strong>`directory`</strong>: 시작 폴더 경로 (빈 값 `""` 지정 시 현재 실행 경로)
+- <strong>`filter`</strong>: 파일 확장자 필터 (구분자는 `;;` 사용, 예: `"Text (*.txt);;All (*)"`)
+- <strong>`initialFilter`</strong>: *(선택)* 기본으로 선택해 둘 필터 지정
+- <strong>`options`</strong>: *(선택)* 대화상자 옵션 (예: `QFileDialog.DontUseNativeDialog`)
+
+<a id="notion-3bb1d46c18fc80fcb925e5894f331230"></a>
+
 ### 📌 리턴값
 
-- 성공 시: ('선택한 파일의 전체 경로', '선택된 필터 문자열') 튜플
-- 취소(Cancel) 시: ('', '선택되어 있던 필터 문자열') 튜플
+- **성공 시**: `('선택한 파일의 전체 경로', '선택된 필터 문자열')` 튜플
+- **취소(Cancel) 시**: `('', '선택되어 있던 필터 문자열')` 튜플
+
+  <em>(경로가 빈 문자열</em> <em>`""`</em><em>로 반환되므로</em> *`if path:`* <em>로 조건 검사)</em>
+
+<a id="notion-3bb1d46c18fc807997bce464a2da6bf8"></a>
+
 ### 💻 핵심 사용 예시
 
 ```python
@@ -41,27 +56,37 @@ if save_path:
     print(f"저장할 경로: {save_path}")
 ```
 
-## 2. QMessageBox (메시지 / 경고 팝업창)
+<a id="notion-3bb1d46c18fc80bdb45fe2ab27556a72"></a>
+
+## 2\. QMessageBox (메시지 / 경고 팝업창)
 
 알림, 경고, 질의 응답 등을 띄울 때 사용합니다.
 
+<a id="notion-3bb1d46c18fc8055b875dc24ae5a99ff"></a>
+
 ### 📌 팝업 종류별 파라미터 및 특징
 
-| 메서드 | 아이콘 | 주요 목적 | 파라미터 구조 |
-|---|---|---|---|
-| about | (앱아이콘) | 단순 정보/버전 안내 | (parent, title, text) |
-| information | ℹ️ | 일반 안내 메시지 | (parent, title, text, buttons, defaultButton) |
-| warning | ⚠️ | 경고 메시지 | (parent, title, text, buttons, defaultButton) |
-| critical | ❌ | 심각한 오류 알림 | (parent, title, text, buttons, defaultButton) |
-| question | ❓ | 사용자의 선택(Yes/No) 확인 | (parent, title, text, buttons, defaultButton) |
+|  |  |  |  |
+| --- | --- | --- | --- |
+| **메서드** | **아이콘** | **주요 목적** | **파라미터 구조** |
+| **`about`** | (앱아이콘) | 단순 정보/버전 안내 | `(parent, title, text)` |
+| **`information`** | ℹ️ | 일반 안내 메시지 | `(parent, title, text, buttons, defaultButton)` |
+| **`warning`** | ⚠️ | 경고 메시지 | `(parent, title, text, buttons, defaultButton)` |
+| **`critical`** | ❌ | 심각한 오류 알림 | `(parent, title, text, buttons, defaultButton)` |
+| **`question`** | ❓ | 사용자의 선택(Yes/No) 확인 | `(parent, title, text, buttons, defaultButton)` |
+
+<a id="notion-3bb1d46c18fc80ea8355e61e9209b902"></a>
 
 ### 📌 공통 파라미터 의미
 
-- parent: 부모 위젯 (self)
-- title: 팝업창 상단 제목
-- text: 팝업창 본문 내용
-- buttons: (선택) 배치할 버튼 조합 (예: QMessageBox.Yes | QMessageBox.No)
-- defaultButton: (선택) 엔터 키 입력 시 기본 실행될 버튼 (예: QMessageBox.No)
+- <strong>`parent`</strong>: 부모 위젯 (`self`)
+- <strong>`title`</strong>: 팝업창 상단 제목
+- <strong>`text`</strong>: 팝업창 본문 내용
+- <strong>`buttons`</strong>: *(선택)* 배치할 버튼 조합 (예: `QMessageBox.Yes | QMessageBox.No`)
+- <strong>`defaultButton`</strong>: *(선택)* 엔터 키 입력 시 기본 실행될 버튼 (예: `QMessageBox.No`)
+
+<a id="notion-3bb1d46c18fc80ecaec2f9cdc58a4c46"></a>
+
 ### 💻 핵심 사용 예시
 
 ```python
@@ -84,25 +109,61 @@ if reply == QMessageBox.Yes:
     print("삭제 실행")
 ```
 
-## 3. QDialog & 메인 UI 요소 (QMenuBar, QToolBar)
+<a id="notion-3bb1d46c18fc8036974bd85c0e208f12"></a>
 
-- 개념: 메인 창(QMainWindow) 외에 데이터 입력, 설정, 알림 등을 위해 띄우는 대화상자 창입니다.
-- 주요 메서드:
-- QMenuBar (메뉴바):
-- QToolBar (툴바):
+## 3\. QDialog &amp; 메인 UI 요소 (QMenuBar, QToolBar)
+
+<a id="notion-3bb1d46c18fc808e9bfbcf800b4dec03"></a>
+
+#### 3.1 QDialog
+
+- **개념**: 메인 창(`QMainWindow`) 외에 데이터 입력, 설정, 알림 등을 위해 띄우는 대화상자 창입니다.
+- **주요 메서드**:
+
+  - `exec()`: 모달(Modal) 창으로 실행 (대화상자를 닫기 전까지 메인 창 클릭 불가).
+  - `open()` / `show()`: 모달리스(Modeless) 창으로 실행 (대화상자가 떠 있어도 메인 창 제어 가능).
+  - `accept()` / `reject()`: 다이얼로그를 **확인(OK)** 또는 취소(Cancel)로 종료하며 결과값 반환.
+
+<a id="notion-3bb1d46c18fc80c8acbfe6cd1e19e276"></a>
+
+#### 3.2 QMenuBar &amp; QToolBar
+
+- <strong>QMenuBar (메뉴바)</strong>:
+
+  - Qt Designer 상단 "여기에 입력하시오"를 클릭해 메뉴(Menu)를 생성하고, 하위 항목으로 액션(QAction)을 추가합니다.
+  - 액션 속성창에서 <strong>단축키(Shortcut)</strong>, <strong>아이콘(Icon)</strong>, **툴팁(ToolTip)** 등을 지정할 수 있습니다.
+  - **시그널**: 메뉴 클릭 시 `triggered` 시그널이 방출됩니다.
+- <strong>QToolBar (툴바)</strong>:
+
+  - 자주 쓰는 `QAction`을 툴바 영역에 **드래그 &amp; 드롭**하여 아이콘/버튼 형태의 빠른 실행 메뉴로 구성합니다.
+
 ```python
 # QMenuBar & QToolBar 액션 연결 예시
 self.actionOpen.triggered.connect(self.open_file)
 self.actionExit.triggered.connect(self.close)
 ```
 
-## 4. 사용자 정의 시그널 (Custom Signal)
+<a id="notion-3bb1d46c18fc8067b0b2da1a363aed15"></a>
 
-- 선언 규칙: pyqtSignal은 PyQt5.QtCore 모듈에 정의되어 있으며, 반드시 클래스 변수(Class Variable) 위치에 선언해야 합니다. (__init__ 함수 내부 선언 불가)
-- 타입 지정: 시그널을 통해 전달할 데이터의 타입을 인자로 지정합니다. (int, str, dict, tuple 등)
-- emit(*args): 정의된 타입의 데이터를 실어서 시그널을 방출합니다.
-- connect(slot_function): 방출된 데이터를 인자로 받는 슬롯 함수를 연결합니다.
-### 💻 3~4번 종합 실습 예시 코드
+## 4\. 사용자 정의 시그널 (Custom Signal)
+
+<a id="notion-3bb1d46c18fc80e4b1a6d7e712c01dcf"></a>
+
+#### 4.1 개념 및 선언 방법
+
+- **선언 규칙**: `pyqtSignal`은 **`PyQt5.QtCore`** 모듈에 정의되어 있으며, **반드시 클래스 변수(Class Variable) 위치에 선언**해야 합니다. (`__init__` 함수 내부 선언 불가)
+- **타입 지정**: 시그널을 통해 전달할 데이터의 타입을 인자로 지정합니다. (`int`, `str`, `dict`, `tuple` 등)
+
+<a id="notion-3bb1d46c18fc8090a9abe551e2c1e5b2"></a>
+
+#### 4.2 시그널 방출 및 수신
+
+- `emit(*args)`: 정의된 타입의 데이터를 실어서 시그널을 방출합니다.
+- `connect(slot_function)`: 방출된 데이터를 인자로 받는 슬롯 함수를 연결합니다.
+
+<a id="notion-3bb1d46c18fc80c5a503d1148d0a2d2b"></a>
+
+### 💻 3\~4번 종합 실습 예시 코드
 
 다이얼로그에서 선택한 옵션(튜플)을 사용자 정의 시그널로 메인 창에 전달하고, 메뉴바와 툴바를 활용하는 전체 예시입니다.
 
@@ -186,10 +247,11 @@ if __name__ == "__main__":
     win = MainWindow()
     win.show()
     sys.exit(app.exec_())
-
 ```
 
-## 5. Thread
+<a id="notion-3bb1d46c18fc800eb5d9dd0353c6c546"></a>
+
+## 5\. Thread
 
 ```python
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -221,7 +283,9 @@ class MyThread(QThread):
         return self.running
 ```
 
-## 6. 이벤트 처리
+<a id="notion-3bb1d46c18fc8070af51fc092bbf02c6"></a>
+
+## 6\. 이벤트 처리
 
 ```python
 class Form(QMainWindow, Ui_MainWindow):
@@ -259,5 +323,4 @@ class Form(QMainWindow, Ui_MainWindow):
         self.lblBlock.move(self.pos_x, self.pos_y)
 ```
 
-
-
+<br>
