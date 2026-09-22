@@ -69,7 +69,8 @@ Notion 업로드 파일의 URL은 만료되므로 `TIL/YYYY/MM/assets/<페이지
 ```text
 update_readme.py       # 기존 실행 진입점
 til_sync/
-  config.py            # 환경 변수, KST 날짜 계산, 입력 검증
+  constants.py         # 공통 경로, 속성 기본값, 요청 제한 시간
+  config.py            # FetchMode 열거형, 환경 변수, KST 날짜 계산, 입력 검증
   notion.py            # API 조회, 페이지네이션, 재시도, 블록 캐시
   markdown.py          # 블록 트리와 리치 텍스트 변환
   assets.py            # 만료되는 첨부파일 다운로드
@@ -78,11 +79,25 @@ til_sync/
 tests/                 # 네트워크와 토큰 없이 실행하는 회귀 테스트
 ```
 
-GitHub Actions는 Python 3.12를 사용하고 `requirements.txt`로 기존 의존성인 Requests 버전을 고정합니다. 표준 라이브러리 `unittest`를 사용하므로 테스트용 패키지는 추가하지 않았습니다.
+GitHub Actions의 Python 버전은 `.python-version`에서 관리합니다(현재 3.12). `requirements.txt`는 실행에 필요한 Requests만 포함하며, 개발용 `requirements-dev.txt`는 여기에 Ruff를 추가합니다. 테스트는 표준 라이브러리 `unittest`를 사용합니다.
+
+VS Code와 CI는 프로젝트의 `ruff.toml`을 사용합니다. 기본 검사 규칙을 유지하면서 import 정리, Python 현대 문법, 오류 가능성 검사도 적용합니다. 검사 대상은 Python 파일이며, 생성된 `TIL/` 문서와 첨부파일은 포맷하지 않습니다. 프로젝트 설정 파일의 적용 방식은 [Ruff 공식 문서](https://docs.astral.sh/ruff/configuration/)를 참고하세요.
+
+개발 환경에서 검사하려면 다음을 실행합니다.
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m ruff check .
+python -m ruff format --check .
+python -m unittest discover -s tests -v
+```
+
+코드 형식을 자동으로 정리할 때는 `python -m ruff format .`을 사용합니다. Python 최소 버전을 변경할 때는 `.python-version`과 `ruff.toml`의 `target-version`을 함께 맞춥니다.
+
+실행용 패키지만 설치하여 동기화하려면 다음을 사용합니다.
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v
 
 # 현재 PowerShell 세션에 토큰과 데이터베이스 ID가 설정된 상태에서 실행
 $env:FETCH_MODE = "DAILY"
@@ -92,4 +107,13 @@ python update_readme.py
 
 환경 변수 `NOTION_PROPERTY_TITLE`, `NOTION_PROPERTY_DATE`로 열 이름을 변경할 수 있으며 기본값은 `제목`, `날짜`입니다. 제목 열 이름이 달라져도 실제 `title` 타입 속성을 찾습니다. 로컬 실행은 현재 디렉터리에 기록하므로 저장소 루트에서 실행하세요. 전체 조회 시 `FETCH_MODE=ALL`로 설정하고 `TARGET_DATE`는 제거합니다. `.env`를 자동으로 읽지는 않습니다.
 
-일간/전체 Actions는 같은 브랜치에서 순서대로 실행합니다. 동기화 전에 테스트를 수행하고, README와 TIL만 커밋합니다. 실제 커밋/푸시 오류는 실패로 표시되며, 원격 변경은 rebase 후 일반 push로 반영합니다. 코드 및 workflow 변경 시 별도의 테스트 CI도 실행합니다.
+일간/전체 Actions는 같은 브랜치에서 순서대로 실행합니다. 동기화 전에 테스트를 수행하고, README와 TIL만 커밋합니다. 실제 커밋/푸시 오류는 실패로 표시되며, 원격 변경은 rebase 후 일반 push로 반영합니다. 코드·설정·workflow 변경 시 별도 CI에서 Ruff 검사, 형식 검사, 테스트를 순서대로 실행합니다.
+
+## 설정과 상수를 변경할 때
+
+- `config.py`의 `FetchMode`는 `DAILY`/`ALL` 실행 모드를 정의합니다. 환경 변수 입력은 공백·대소문자를 정리한 뒤 열거형으로 검증합니다.
+- 공통 경로·속성 이름 기본값·HTTP 요청 제한 시간은 `constants.py`에서 관리합니다. 저장 경로를 바꾸면 workflow의 `git add` 대상도 함께 확인해야 합니다.
+- API 버전·페이지 크기·재시도 정책은 `notion.py`, 첨부파일 크기·다운로드 정책은 `assets.py`, 파일명 길이는 `storage.py`의 상수에서 관리합니다.
+- Notion JSON 필드명과 Markdown 문법은 해당 처리 코드에 유지합니다. 프로토콜에 정해진 값까지 별도 설정으로 노출하지 않습니다.
+
+API·파일·설정 오류는 구체적인 예외 타입으로 처리합니다. 페이지 일부가 실패하면 `SyncError`로 실행을 실패시키고 README 갱신을 막습니다. 예상하지 못한 프로그래밍 오류는 원래 traceback을 남겨 원인을 확인할 수 있습니다.

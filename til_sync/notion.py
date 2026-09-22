@@ -7,26 +7,41 @@ import math
 import random
 import time
 from collections.abc import Iterator
+from http import HTTPStatus
+from typing import Self
 from urllib.parse import quote, unquote
 
 import requests
 
+from .constants import DEFAULT_DATE_PROPERTY, REQUEST_TIMEOUT
+
 API_BASE = "https://api.notion.com/v1"
 API_VERSION = "2026-03-11"
-REQUEST_TIMEOUT = (10, 60)
+PAGE_SIZE = 100
+TITLE_PROPERTY_INLINE_LIMIT = 25
 REQUEST_INTERVAL = 0.34  # Stay below the basic plan's 180 requests/minute.
 MAX_ATTEMPTS = 5
 MAX_RETRY_DELAY = 300.0
-RETRYABLE_STATUSES = {429, 500, 502, 503, 504, 529}
+MAX_BACKOFF_DELAY = 30.0
+MAX_RETRY_JITTER = 0.25
+NOTION_SERVICE_OVERLOAD = 529  # Notion-specific status, absent from HTTPStatus.
+RETRYABLE_STATUSES = {
+    HTTPStatus.TOO_MANY_REQUESTS,
+    HTTPStatus.INTERNAL_SERVER_ERROR,
+    HTTPStatus.BAD_GATEWAY,
+    HTTPStatus.SERVICE_UNAVAILABLE,
+    HTTPStatus.GATEWAY_TIMEOUT,
+    NOTION_SERVICE_OVERLOAD,
+}
 
 LOGGER = logging.getLogger(__name__)
 
 ERROR_HINTS = {
-    400: "Check the configured property names, property types, and IDs.",
-    401: "Check NOTION_TOKEN and whether the Notion connection is still active.",
-    403: "Give the Notion connection permission to read this content.",
-    404: "Check the ID and share the database/page with the Notion connection.",
-    429: "Notion's request limit was reached; try again later.",
+    HTTPStatus.BAD_REQUEST: "Check the configured property names, property types, and IDs.",
+    HTTPStatus.UNAUTHORIZED: "Check NOTION_TOKEN and whether the Notion connection is still active.",
+    HTTPStatus.FORBIDDEN: "Give the Notion connection permission to read this content.",
+    HTTPStatus.NOT_FOUND: "Check the ID and share the database/page with the Notion connection.",
+    HTTPStatus.TOO_MANY_REQUESTS: "Notion's request limit was reached; try again later.",
 }
 KNOWN_ERROR_CODES = {
     "invalid_json",
@@ -78,7 +93,7 @@ class NotionClient:
         self._children_cache: dict[str, list[dict]] = {}
         self._block_cache: dict[str, dict] = {}
 
-    def __enter__(self) -> NotionClient:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback) -> None:
@@ -118,11 +133,11 @@ class NotionClient:
     def query_pages(
         self,
         data_source_id: str,
-        date_property: str = "날짜",
+        date_property: str = DEFAULT_DATE_PROPERTY,
         target_date: str | None = None,
     ) -> Iterator[dict]:
         """Yield every matching page, preserving the API's returned order."""
-        payload: dict = {"page_size": 100}
+        payload: dict = {"page_size": PAGE_SIZE}
         if target_date is not None:
             payload["filter"] = {
                 "property": date_property,
@@ -172,7 +187,7 @@ class NotionClient:
         cursor: str | None = None
         seen_cursors: set[str] = set()
         while True:
-            parameters = dict(payload or {"page_size": 100})
+            parameters = dict(payload or {"page_size": PAGE_SIZE})
             if cursor is not None:
                 parameters["start_cursor"] = cursor
             response = self._request(method, path, parameters)
@@ -246,7 +261,7 @@ class NotionClient:
                 ) from None
 
             try:
-                if 200 <= response.status_code < 300:
+                if HTTPStatus.OK <= response.status_code < HTTPStatus.MULTIPLE_CHOICES:
                     try:
                         data = response.json()
                     except ValueError:
@@ -271,7 +286,7 @@ class NotionClient:
                 if delay > MAX_RETRY_DELAY:
                     # Never shorten Retry-After and issue another request too soon.
                     raise NotionAPIError(
-                        "Notion requested a retry delay longer than five minutes. "
+                        f"Notion requested a retry delay longer than {MAX_RETRY_DELAY:g} seconds. "
                         "Run the sync again later.",
                         status=error.status,
                         code=error.code,
@@ -296,7 +311,7 @@ def _path_id(value: str) -> str:
 
 
 def _backoff(attempt: int) -> float:
-    return min(2**attempt, 30) + random.uniform(0, 0.25)
+    return min(2**attempt, MAX_BACKOFF_DELAY) + random.uniform(0, MAX_RETRY_JITTER)
 
 
 def _response_error(response: requests.Response) -> NotionAPIError:

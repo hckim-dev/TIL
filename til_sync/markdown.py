@@ -8,11 +8,23 @@ import html
 import logging
 import re
 from collections.abc import Callable
+from typing import Final
 from urllib.parse import quote
 
+from .constants import NOTION_WEB_BASE
+
 LOGGER = logging.getLogger(__name__)
-LIST_TYPES = {"bulleted_list_item", "numbered_list_item", "to_do"}
-MEDIA_TYPES = {"image", "audio", "video", "pdf", "file"}
+LIST_TYPES: Final = frozenset({"bulleted_list_item", "numbered_list_item", "to_do"})
+MEDIA_TYPES: Final = frozenset({"image", "audio", "video", "pdf", "file"})
+HEADING_LEVELS: Final = {
+    "heading_1": 1,
+    "heading_2": 2,
+    "heading_3": 3,
+    "heading_4": 4,
+}
+MIN_CODE_FENCE_LENGTH: Final = 3
+TOC_PLACEHOLDER: Final = "\x00NOTION_TOC\x00"
+TOC_PATTERN: Final = re.compile(rf"(?m)^([ >]*){re.escape(TOC_PLACEHOLDER)}$")
 LANGUAGE_ALIASES = {
     "plain text": "text",
     "c++": "cpp",
@@ -30,7 +42,7 @@ LANGUAGE_ALIASES = {
 
 
 def notion_url(identifier: str) -> str:
-    return "https://www.notion.so/" + identifier.replace("-", "")
+    return NOTION_WEB_BASE + "/" + identifier.replace("-", "")
 
 
 def escape_markdown(text: str) -> str:
@@ -201,7 +213,7 @@ class MarkdownRenderer:
         fetch_children: Callable[[str], list[dict]],
         media_url: Callable[[dict, dict], str] | None = None,
         page_url: str = "",
-    ):
+    ) -> None:
         self.fetch_children = fetch_children
         self.media_url = media_url
         self.page_url = page_url
@@ -217,8 +229,7 @@ class MarkdownRenderer:
         content = self._render_blocks(blocks)
         # Delayed TOC insertion includes headings nested in columns/toggles.
         toc = self._table_of_contents()
-        content = re.sub(
-            r"(?m)^([ >]*)\x00NOTION_TOC\x00$",
+        content = TOC_PATTERN.sub(
             lambda match: "\n".join(match[1] + line for line in toc.split("\n")),
             content,
         )
@@ -297,8 +308,8 @@ class MarkdownRenderer:
             if children:
                 content += "\n\n" + self._indent(children, len(marker))
             return content
-        if kind in {"heading_1", "heading_2", "heading_3", "heading_4"}:
-            level = int(kind[-1])
+        if kind in HEADING_LEVELS:
+            level = HEADING_LEVELS[kind]
             anchor = self._heading_anchor(block, level, plain_text(rich_text))
             if payload.get("is_toggleable"):
                 summary = f"<strong>{_rich_text(rich_text, html_mode=True)}</strong>"
@@ -327,7 +338,8 @@ class MarkdownRenderer:
         if kind == "code":
             code = plain_text(rich_text)
             fence = "`" * max(
-                3, max((len(run) + 1 for run in re.findall(r"`+", code)), default=0)
+                MIN_CODE_FENCE_LENGTH,
+                max((len(run) + 1 for run in re.findall(r"`+", code)), default=0),
             )
             language = payload.get("language", "text")
             language = LANGUAGE_ALIASES.get(language, language)
@@ -400,7 +412,7 @@ class MarkdownRenderer:
         if kind in {"meeting_notes", "transcription"}:
             return self._meeting_notes(block)
         if kind == "table_of_contents":
-            return "\x00NOTION_TOC\x00"
+            return TOC_PLACEHOLDER
         if kind == "breadcrumb":
             return _link("Notion 페이지 경로", self._block_url(block))
         # Future types may still include readable text/children. Preserve both.
@@ -560,7 +572,7 @@ class MarkdownRenderer:
             return self.page_url.split("#", 1)[0] + (
                 "#" + identifier if identifier else ""
             )
-        return notion_url(identifier) if identifier else "https://www.notion.so"
+        return notion_url(identifier) if identifier else NOTION_WEB_BASE
 
     def _fallback(self, block: dict, reason: str) -> str:
         LOGGER.warning(

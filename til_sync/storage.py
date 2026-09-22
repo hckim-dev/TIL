@@ -10,7 +10,21 @@ from pathlib import Path
 from urllib.parse import quote, urlsplit
 from uuid import UUID
 
+from .constants import (
+    DEFAULT_PAGE_TITLE,
+    ISO_DATE_LENGTH,
+    README_FILENAME,
+    RELATIVE_URL_SAFE,
+    TIL_DIRECTORY,
+)
 from .markdown import escape_markdown
+
+MAX_TITLE_BYTES = 180
+HEADER_SCAN_LINES = 12
+TITLE_FILENAME_OFFSET = ISO_DATE_LENGTH + len("_")
+NOTION_PAGE_HOSTS = frozenset(
+    {"notion.so", "www.notion.so", "notion.com", "www.notion.com", "app.notion.com"}
+)
 
 MARKER_START = "<!-- TIL_LIST_START -->"
 MARKER_END = "<!-- TIL_LIST_END -->"
@@ -60,8 +74,8 @@ def sanitize_filename(title: str) -> str:
     # Linux의 255-byte 파일명 제한도 지킵니다. 접미사와 확장자 공간을 남깁니다.
     cleaned = re.sub(r'[\\/*?:"<>|\x00-\x1f\x7f]', "", title)
     cleaned = re.sub(r"\s", "_", cleaned).strip(". ")
-    cleaned = cleaned.encode("utf-8")[:180].decode("utf-8", errors="ignore")
-    return cleaned.rstrip(". ") or "제목없음"
+    cleaned = cleaned.encode("utf-8")[:MAX_TITLE_BYTES].decode("utf-8", errors="ignore")
+    return cleaned.rstrip(". ") or DEFAULT_PAGE_TITLE
 
 
 def page_id_from_header(header: str) -> str | None:
@@ -76,13 +90,7 @@ def page_id_from_header(header: str) -> str | None:
     )
     if source:
         parsed = urlsplit(source.group(1))
-        if parsed.hostname not in {
-            "notion.so",
-            "www.notion.so",
-            "notion.com",
-            "www.notion.com",
-            "app.notion.com",
-        }:
+        if parsed.hostname not in NOTION_PAGE_HOSTS:
             return None
         match = re.search(
             r"([0-9a-f]{32}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$",
@@ -109,12 +117,12 @@ def scan_entries(til_dir: Path) -> list[Entry]:
         if not re.match(r"\d{4}-\d{2}-\d{2}_.+\.md$", path.name):
             continue
         try:
-            entry_date = date.fromisoformat(path.name[:10])
+            entry_date = date.fromisoformat(path.name[:ISO_DATE_LENGTH])
         except ValueError:
             continue
         with path.open(encoding="utf-8") as handle:
-            header = "".join(handle.readline() for _ in range(12))
-        title = path.stem[11:].replace("_", " ")
+            header = "".join(handle.readline() for _ in range(HEADER_SCAN_LINES))
+        title = path.stem[TITLE_FILENAME_OFFSET:].replace("_", " ")
         metadata = re.search(r"^<!-- notion-title: (.+) -->$", header, re.MULTILINE)
         if metadata:
             parsed_title = json.loads(metadata.group(1))
@@ -129,9 +137,9 @@ def scan_entries(til_dir: Path) -> list[Entry]:
 
 
 class PageStore:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path) -> None:
         self.root = root
-        self.til_dir = root / "TIL"
+        self.til_dir = root / TIL_DIRECTORY
         self.entries = scan_entries(self.til_dir)
 
     def path_for(self, page_id: str, title: str, date_str: str) -> Path:
@@ -174,11 +182,14 @@ class PageStore:
         )
         changed = atomic_write_text(path, content)
         for entry in self.entries:
-            if entry.page_id == page_key and entry.path != path:
-                # 경로는 TIL 스캔에서 얻은 같은 Notion 페이지 파일만 허용합니다.
-                if entry.path.resolve().is_relative_to(self.til_dir.resolve()):
-                    entry.path.unlink(missing_ok=True)
-                    changed = True
+            # 경로는 TIL 스캔에서 얻은 같은 Notion 페이지 파일만 허용합니다.
+            if (
+                entry.page_id == page_key
+                and entry.path != path
+                and entry.path.resolve().is_relative_to(self.til_dir.resolve())
+            ):
+                entry.path.unlink(missing_ok=True)
+                changed = True
         self.entries = [entry for entry in self.entries if entry.page_id != page_key]
         self.entries.append(Entry(path, date.fromisoformat(date_str), title, page_key))
         return changed
@@ -200,7 +211,7 @@ def build_index(entries: list[Entry], readme_dir: Path) -> str:
             )
         for entry in items:
             relative = Path(os.path.relpath(entry.path, readme_dir)).as_posix()
-            link = quote(relative, safe="/-._~")
+            link = quote(relative, safe=RELATIVE_URL_SAFE)
             label = escape_markdown(entry.title.replace("\n", " ").replace("\r", " "))
             parts.append(f"- 🗓️ **{entry.date:%Y.%m.%d}** | 🔗 [{label}](./{link})\n")
         parts.append("\n" if index == 0 else "\n</details>\n\n")
@@ -208,7 +219,7 @@ def build_index(entries: list[Entry], readme_dir: Path) -> str:
 
 
 def update_readme(root: Path, *, reset: bool = False) -> bool:
-    path = root / "README.md"
+    path = root / README_FILENAME
     original = (
         DEFAULT_README_TEMPLATE
         if reset or not path.exists()
@@ -232,6 +243,6 @@ def update_readme(root: Path, *, reset: bool = False) -> bool:
         raise ValueError(
             "README의 TIL_LIST_START/END 마커 쌍을 확인하세요. 기존 내용은 보존했습니다."
         )
-    index = build_index(scan_entries(root / "TIL"), path.parent)
+    index = build_index(scan_entries(root / TIL_DIRECTORY), path.parent)
     content = original[: start + len(MARKER_START)] + "\n" + index + original[end:]
     return atomic_write_text(path, content)

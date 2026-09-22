@@ -69,16 +69,30 @@ class AssetTests(unittest.TestCase):
         self.response.iter_content.side_effect = requests.ConnectionError(
             "PRIVATE_SIGNED_URL"
         )
-        with AssetStore(self.path, PAGE_ID, session=self.session) as store:
-            with self.assertRaises(AssetError) as raised:
-                store.media_url({"id": "block"}, self.payload)
+        with (
+            AssetStore(self.path, PAGE_ID, session=self.session) as store,
+            self.assertRaises(AssetError) as raised,
+        ):
+            store.media_url({"id": "block"}, self.payload)
         self.assertNotIn("PRIVATE_SIGNED_URL", str(raised.exception))
         self.assertEqual((self.path.parent / link).read_bytes(), before)
         self.assertEqual(len(list((self.path.parent / "assets").rglob("*.*"))), 1)
 
     def test_oversize_stream_leaves_no_partial_file(self):
-        with patch("til_sync.assets.MAX_ASSET_BYTES", 3):
-            with AssetStore(self.path, PAGE_ID, session=self.session) as store:
-                with self.assertRaises(AssetError):
-                    store.media_url({"id": "block"}, self.payload)
+        with (
+            patch("til_sync.assets.MAX_ASSET_BYTES", 3),
+            AssetStore(self.path, PAGE_ID, session=self.session) as store,
+            self.assertRaises(AssetError),
+        ):
+            store.media_url({"id": "block"}, self.payload)
+        self.assertFalse(any(p.is_file() for p in self.path.parent.rglob("*")))
+
+    def test_size_limit_error_uses_the_configured_limit(self):
+        self.response.headers["Content-Length"] = str(3 * 1024 * 1024)
+        with (
+            patch("til_sync.assets.MAX_ASSET_BYTES", 2 * 1024 * 1024),
+            AssetStore(self.path, PAGE_ID, session=self.session) as store,
+            self.assertRaisesRegex(AssetError, "2 MiB"),
+        ):
+            store.media_url({"id": "block"}, self.payload)
         self.assertFalse(any(p.is_file() for p in self.path.parent.rglob("*")))

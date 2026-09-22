@@ -1,12 +1,13 @@
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from til_sync.config import Config
+from til_sync.config import Config, FetchMode
+from til_sync.notion import NotionAPIError
 from til_sync.storage import PageStore, sanitize_filename, scan_entries, update_readme
-from til_sync.sync import main, sync
+from til_sync.sync import SyncError, main, sync
 
 PAGE_ID = "11111111-1111-1111-1111-111111111111"
 OTHER_ID = "22222222-2222-2222-2222-222222222222"
@@ -32,9 +33,10 @@ def make_page(page_id=PAGE_ID, title="학습_기록 [C]", day="2026-09-21"):
 class ConfigTests(unittest.TestCase):
     def test_kst_previous_day_across_utc_midnight(self):
         env = {"NOTION_TOKEN": "private", "NOTION_DATABASE_ID": "db"}
-        now = datetime(2026, 9, 21, 15, 5, tzinfo=timezone.utc)
+        now = datetime(2026, 9, 21, 15, 5, tzinfo=UTC)
         config = Config.from_env(env, now=now)
         self.assertEqual(config.target_date, "2026-09-21")
+        self.assertIs(config.fetch_mode, FetchMode.DAILY)
         self.assertNotIn("private", repr(config))
         self.assertEqual(Config.from_env(dict(env, FETCH_MODE="ALL")).target_date, None)
         self.assertEqual(
@@ -55,6 +57,23 @@ class ConfigTests(unittest.TestCase):
             with self.subTest(overrides=overrides), self.assertRaises(ValueError):
                 Config.from_env(dict(base, **overrides))
 
+    def test_environment_mode_is_normalized_to_enum(self):
+        config = Config.from_env(
+            {
+                "NOTION_TOKEN": "token",
+                "NOTION_DATA_SOURCE_ID": "source",
+                "FETCH_MODE": " all ",
+                "NOTION_PROPERTY_TITLE": "Name",
+                "NOTION_PROPERTY_DATE": "Date",
+            }
+        )
+        self.assertIs(config.fetch_mode, FetchMode.ALL)
+        self.assertEqual(str(config.fetch_mode), "ALL")
+        self.assertIsNone(config.target_date)
+        self.assertEqual(
+            (config.title_property, config.date_property), ("Name", "Date")
+        )
+
 
 class SyncTests(unittest.TestCase):
     def setUp(self):
@@ -62,7 +81,7 @@ class SyncTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         self.config = Config(
-            token="t", database_id="db", fetch_mode="ALL", root=self.root
+            token="t", database_id="db", fetch_mode=FetchMode.ALL, root=self.root
         )
         self.client = Mock()
         self.client.resolve_data_source.return_value = "source"
@@ -105,10 +124,29 @@ class SyncTests(unittest.TestCase):
     def test_failure_keeps_old_page_and_readme_and_fails_run(self):
         sync(self.config, self.client)
         before = {p: p.read_bytes() for p in self.root.rglob("*.md")}
-        self.client.get_block_children.side_effect = RuntimeError("fetch failed")
-        with self.assertRaisesRegex(RuntimeError, "1개 페이지"):
+        self.client.get_block_children.side_effect = NotionAPIError("fetch failed")
+        with self.assertRaisesRegex(SyncError, "1개 페이지"):
             sync(self.config, self.client)
         self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob("*.md")})
+
+    def test_unexpected_programming_error_is_not_hidden_as_page_failure(self):
+        sync(self.config, self.client)
+        before = {p: p.read_bytes() for p in self.root.rglob("*.md")}
+        self.client.get_block_children.side_effect = TypeError("unexpected bug")
+        with self.assertRaisesRegex(TypeError, "unexpected bug"):
+            sync(self.config, self.client)
+        self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob("*.md")})
+
+    def test_expected_page_failure_continues_other_pages_but_fails_run(self):
+        self.client.query_pages.return_value = [make_page(), make_page(OTHER_ID)]
+        self.client.get_block_children.side_effect = [NotionAPIError("offline"), []]
+        with self.assertRaisesRegex(SyncError, "1개 페이지"):
+            sync(self.config, self.client)
+        entries = scan_entries(self.root / "TIL")
+        self.assertEqual(
+            [entry.page_id for entry in entries], [OTHER_ID.replace("-", "")]
+        )
+        self.assertFalse((self.root / "README.md").exists())
 
     def test_empty_date_skipped_but_missing_column_fails(self):
         self.client.query_pages.return_value = [make_page(day=None)]

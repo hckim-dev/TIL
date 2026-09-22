@@ -3,13 +3,18 @@
 import logging
 from datetime import date
 
-from .assets import AssetStore
+from .assets import AssetError, AssetStore
 from .config import Config
+from .constants import DEFAULT_PAGE_TITLE, ISO_DATE_LENGTH
 from .markdown import MarkdownRenderer, notion_url, plain_text
-from .notion import NotionClient
+from .notion import TITLE_PROPERTY_INLINE_LIMIT, NotionAPIError, NotionClient
 from .storage import PageStore, update_readme
 
 LOGGER = logging.getLogger(__name__)
+
+
+class SyncError(RuntimeError):
+    """일부 페이지 처리 실패로 README 갱신과 자동 커밋을 중단합니다."""
 
 
 def page_title(page: dict, property_name: str, client: NotionClient) -> str:
@@ -20,13 +25,13 @@ def page_title(page: dict, property_name: str, client: NotionClient) -> str:
             (value for value in properties.values() if value.get("type") == "title"), {}
         )
     rich_text = prop.get("title", [])
-    if len(rich_text) >= 25 and prop.get("id"):
+    if len(rich_text) >= TITLE_PROPERTY_INLINE_LIMIT and prop.get("id"):
         rich_text = [
             item["title"]
             for item in client.iter_page_property_items(page["id"], prop["id"])
             if item.get("type") == "title"
         ]
-    return plain_text(rich_text).strip() or "제목없음"
+    return plain_text(rich_text).strip() or DEFAULT_PAGE_TITLE
 
 
 def sync(config: Config, client: NotionClient) -> int:
@@ -58,7 +63,9 @@ def sync(config: Config, client: NotionClient) -> int:
                 skipped += 1
                 LOGGER.warning("날짜가 비어 있어 건너뜁니다 (페이지 %s).", page_id)
                 continue
-            date_str = date.fromisoformat(date_value["start"][:10]).isoformat()
+            date_str = date.fromisoformat(
+                date_value["start"][:ISO_DATE_LENGTH]
+            ).isoformat()
             title = page_title(page, config.title_property, client)
             path = store.path_for(page_id, title, date_str)
             page_url = page.get("url") or notion_url(page_id)
@@ -76,13 +83,11 @@ def sync(config: Config, client: NotionClient) -> int:
                 "저장" if changed else "변경 없음",
                 path.relative_to(config.root),
             )
-        except Exception as exc:
+        except (NotionAPIError, AssetError, OSError, ValueError) as exc:
             failed += 1
             LOGGER.error("페이지 %s 처리 실패: %s", page_id, exc)
     if failed:
-        raise RuntimeError(
-            f"{failed}개 페이지 동기화 실패. README를 갱신하지 않았습니다."
-        )
+        raise SyncError(f"{failed}개 페이지 동기화 실패. README를 갱신하지 않았습니다.")
     update_readme(config.root, reset=config.reset_readme)
     LOGGER.info("동기화 완료: 처리 %d개, 날짜 없음 %d개", saved, skipped)
     return saved
@@ -94,7 +99,7 @@ def main() -> int:
         config = Config.from_env()
         with NotionClient(config.token) as client:
             sync(config, client)
-    except Exception as exc:
+    except (NotionAPIError, AssetError, SyncError, OSError, ValueError) as exc:
         LOGGER.error("동기화 중단: %s", exc)
         return 1
     return 0
