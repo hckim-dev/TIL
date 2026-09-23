@@ -172,10 +172,12 @@ class MarkdownRendererTests(unittest.TestCase):
             (
                 "c",
                 "c",
-                "#include <stdint.h>\n"
-                "uint8_t read_value(const uint8_t *buffer) {\n"
-                "    return buffer[0] & 0x0F;\n"
-                "}\n",
+                (
+                    "#include <stdint.h>\n"
+                    "uint8_t read_value(const uint8_t *buffer) {\n"
+                    "    return buffer[0] & 0x0F;\n"
+                    "}\n"
+                ),
             ),
             ("c++", "cpp", cpp_source),
             ("cpp", "cpp", cpp_source),
@@ -189,17 +191,18 @@ class MarkdownRendererTests(unittest.TestCase):
                 "bash",
                 'if [ "$status" -eq 0 ]; then\n\tprintf "%s\\n" "$value" # log\nfi\n',
             ),
-            ("plaintext", "text", plain_source),
             ("plain text", "text", plain_source),
             (
                 "verilog",
                 "verilog",
-                "`define WIDTH 8\n"
-                "module counter(input wire clk, output reg [`WIDTH-1:0] count);\n"
-                "    always @(posedge clk) begin\n"
-                "        count <= count + 1'b1;\n"
-                "    end\n"
-                "endmodule\n",
+                (
+                    "`define WIDTH 8\n"
+                    "module counter(input wire clk, output reg [`WIDTH-1:0] count);\n"
+                    "    always @(posedge clk) begin\n"
+                    "        count <= count + 1'b1;\n"
+                    "    end\n"
+                    "endmodule\n"
+                ),
             ),
         ]
         renderer = self.renderer()

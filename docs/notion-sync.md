@@ -25,6 +25,8 @@ Notion 데이터베이스의 학습 기록을 `TIL/YYYY/MM/YYYY-MM-DD_제목.md`
 
 Notion API 버전은 `2026-03-11`로 고정했습니다. 기존 database ID에서 데이터 소스를 조회하여 실제 표의 내용을 가져옵니다. 데이터 소스가 여러 개면 임의로 선택하지 않고 `NOTION_DATA_SOURCE_ID`를 설정하도록 오류를 냅니다. [Notion 데이터 소스 전환 안내](https://developers.notion.com/guides/get-started/upgrade-guide-2025-09-03), [2026-03-11 변경 사항](https://developers.notion.com/guides/get-started/upgrade-guide-2026-03-11).
 
+`NOTION_DATA_SOURCE_ID`는 선택 항목입니다. GitHub Actions에서 미등록 Secret은 빈 문자열로 전달되므로, `NOTION_TOKEN`과 `NOTION_DATABASE_ID`가 유효하고 해당 데이터베이스에 접근 가능한 데이터 소스가 하나라면 이 Secret 없이 동기화할 수 있습니다. 데이터 소스가 여러 개라면 저장소의 **Settings → Secrets and variables → Actions**에 사용할 데이터 소스 ID를 등록하세요. [GitHub Secret 동작 안내](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#using-secrets-in-a-workflow).
+
 ## 변환 범위
 
 | Notion 내용                             | GitHub Markdown 표현                                                                       |
@@ -49,7 +51,7 @@ Notion API 버전은 `2026-03-11`로 고정했습니다. 기존 database ID에�
 | 회의록                                  | API가 제공하는 요약·메모·대화 기록 섹션                                                    |
 | 경로 표시, API 미지원/새 블록           | 원본 링크와 설명. 제공되는 텍스트·하위 블록은 보존                                         |
 
-코드 블록의 `c`, `python`, `bash`, `verilog` 언어 태그는 그대로 유지하며, `c++`는 `cpp`, `plain text`와 `plaintext`는 `text`로 변환합니다. 그 밖의 언어도 Markdown 언어 태그로 사용할 수 있는 이름이면 유지합니다. 코드 본문의 들여쓰기·특수문자는 그대로 보존하며, Verilog의 백틱 지시문에도 Markdown 이스케이프를 추가하지 않습니다.
+코드 블록의 `c`, `cpp`, `python`, `bash`, `verilog` 언어 태그는 그대로 유지하며, `c++`는 `cpp`, `plain text`는 `text`로 변환합니다. 그 밖의 언어도 Markdown 언어 태그로 사용할 수 있는 이름이면 유지합니다. 코드 본문의 들여쓰기·특수문자는 그대로 보존하며, Verilog의 백틱 지시문에도 Markdown 이스케이프를 추가하지 않습니다.
 
 Notion 화면과 GitHub Markdown은 표현 방식이 다릅니다. 글자색·배경색·컬럼 너비·임베드의 인터랙션·DB 보기/필터는 재현하지 않습니다. 버튼·폼 등 API가 내용을 제공하지 않는 블록은 원본 링크를 남깁니다. 멘션 대상의 접근 권한이 없으면 API가 제공한 제한된 표시만 사용할 수 있습니다. [Notion 블록 문서](https://developers.notion.com/reference/block), [리치 텍스트 문서](https://developers.notion.com/reference/rich-text).
 
