@@ -12,9 +12,9 @@
 ## 📚 TIL 기록 목록
 
 <!-- TIL_LIST_START -->
-
 ### 💡 2026년 09월
 
+- 🗓️ **2026.09.23** | 🔗 [\[Linux\] 공유 메모리, 메시지 큐와 스레드 동기화](./TIL/2026/09/2026-09-23_%5BLinux%5D_%EA%B3%B5%EC%9C%A0_%EB%A9%94%EB%AA%A8%EB%A6%AC%2C_%EB%A9%94%EC%8B%9C%EC%A7%80_%ED%81%90%EC%99%80_%EC%8A%A4%EB%A0%88%EB%93%9C_%EB%8F%99%EA%B8%B0%ED%99%94.md)
 - 🗓️ **2026.09.22** | 🔗 [\[Linux\] 프로세스 제어, IPC와 세마포어](./TIL/2026/09/2026-09-22_%5BLinux%5D_%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4_%EC%A0%9C%EC%96%B4%2C_IPC%EC%99%80_%EC%84%B8%EB%A7%88%ED%8F%AC%EC%96%B4.md)
 - 🗓️ **2026.09.21** | 🔗 [\[Linux\] 파일 입출력과 프로세스 관리 기초](./TIL/2026/09/2026-09-21_%5BLinux%5D_%ED%8C%8C%EC%9D%BC_%EC%9E%85%EC%B6%9C%EB%A0%A5%EA%B3%BC_%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4_%EA%B4%80%EB%A6%AC_%EA%B8%B0%EC%B4%88.md)
 - 🗓️ **2026.09.18** | 🔗 [\[Linux\] 셸 스크립트와 빌드 툴체인 (GCC, Make, Library)](./TIL/2026/09/2026-09-18_%5BLinux%5D_%EC%85%B8_%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80_%EB%B9%8C%EB%93%9C_%ED%88%B4%EC%B2%B4%EC%9D%B8_%28GCC%2C_Make%2C_Library%29.md)
