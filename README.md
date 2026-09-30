@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 09월
 
+- 🗓️ **2026.09.30** | 🔗 [\[Linux\] 문자 디바이스 드라이버와 File Operations](./TIL/2026/09/2026-09-30_%5BLinux%5D_%EB%AC%B8%EC%9E%90_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84%EC%99%80_File_Operations.md)
 - 🗓️ **2026.09.29** | 🔗 [\[Linux\] 커널 메모리 관리, VFS와 디바이스 드라이버](./TIL/2026/09/2026-09-29_%5BLinux%5D_%EC%BB%A4%EB%84%90_%EB%A9%94%EB%AA%A8%EB%A6%AC_%EA%B4%80%EB%A6%AC%2C_VFS%EC%99%80_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
 - 🗓️ **2026.09.28** | 🔗 [\[Linux\] POSIX 세마포어, 태스크 관리와 커널 메모리](./TIL/2026/09/2026-09-28_%5BLinux%5D_POSIX_%EC%84%B8%EB%A7%88%ED%8F%AC%EC%96%B4%2C_%ED%83%9C%EC%8A%A4%ED%81%AC_%EA%B4%80%EB%A6%AC%EC%99%80_%EC%BB%A4%EB%84%90_%EB%A9%94%EB%AA%A8%EB%A6%AC.md)
 - 🗓️ **2026.09.23** | 🔗 [\[Linux\] 공유 메모리, 메시지 큐와 스레드 동기화](./TIL/2026/09/2026-09-23_%5BLinux%5D_%EA%B3%B5%EC%9C%A0_%EB%A9%94%EB%AA%A8%EB%A6%AC%2C_%EB%A9%94%EC%8B%9C%EC%A7%80_%ED%81%90%EC%99%80_%EC%8A%A4%EB%A0%88%EB%93%9C_%EB%8F%99%EA%B8%B0%ED%99%94.md)
