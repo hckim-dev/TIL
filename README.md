@@ -12,7 +12,12 @@
 ## 📚 TIL 기록 목록
 
 <!-- TIL_LIST_START -->
-### 💡 2026년 09월
+### 💡 2026년 10월
+
+- 🗓️ **2026.10.01** | 🔗 [\[Linux\] 하드웨어 인터페이스 · 인터럽트 · 플랫폼 드라이버](./TIL/2026/10/2026-10-01_%5BLinux%5D_%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4_%C2%B7_%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8_%C2%B7_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
+
+<details>
+<summary>📂 2026년 09월 (8개의 기록)</summary>
 
 - 🗓️ **2026.09.30** | 🔗 [\[Linux\] 문자 디바이스 드라이버와 File Operations](./TIL/2026/09/2026-09-30_%5BLinux%5D_%EB%AC%B8%EC%9E%90_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84%EC%99%80_File_Operations.md)
 - 🗓️ **2026.09.29** | 🔗 [\[Linux\] 커널 메모리 관리, VFS와 디바이스 드라이버](./TIL/2026/09/2026-09-29_%5BLinux%5D_%EC%BB%A4%EB%84%90_%EB%A9%94%EB%AA%A8%EB%A6%AC_%EA%B4%80%EB%A6%AC%2C_VFS%EC%99%80_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
@@ -22,6 +27,8 @@
 - 🗓️ **2026.09.21** | 🔗 [\[Linux\] 파일 입출력과 프로세스 관리 기초](./TIL/2026/09/2026-09-21_%5BLinux%5D_%ED%8C%8C%EC%9D%BC_%EC%9E%85%EC%B6%9C%EB%A0%A5%EA%B3%BC_%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4_%EA%B4%80%EB%A6%AC_%EA%B8%B0%EC%B4%88.md)
 - 🗓️ **2026.09.18** | 🔗 [\[Linux\] 셸 스크립트와 빌드 툴체인 (GCC, Make, Library)](./TIL/2026/09/2026-09-18_%5BLinux%5D_%EC%85%B8_%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EC%99%80_%EB%B9%8C%EB%93%9C_%ED%88%B4%EC%B2%B4%EC%9D%B8_%28GCC%2C_Make%2C_Library%29.md)
 - 🗓️ **2026.09.17** | 🔗 [\[Linux\] 필수 핵심 명령어, 파일 권한(chmod/umask) 및 입출력·파이프 완전 정복](./TIL/2026/09/2026-09-17_%5BLinux%5D_%ED%95%84%EC%88%98_%ED%95%B5%EC%8B%AC_%EB%AA%85%EB%A0%B9%EC%96%B4%2C_%ED%8C%8C%EC%9D%BC_%EA%B6%8C%ED%95%9C%28chmodumask%29_%EB%B0%8F_%EC%9E%85%EC%B6%9C%EB%A0%A5%C2%B7%ED%8C%8C%EC%9D%B4%ED%94%84_%EC%99%84%EC%A0%84_%EC%A0%95%EB%B3%B5.md)
+
+</details>
 
 <details>
 <summary>📂 2026년 08월 (17개의 기록)</summary>
