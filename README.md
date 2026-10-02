@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.02** | 🔗 [\[Linux\] 디바이스 트리와 플랫폼 드라이버](./TIL/2026/10/2026-10-02_%5BLinux%5D_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%ED%8A%B8%EB%A6%AC%EC%99%80_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
 - 🗓️ **2026.10.01** | 🔗 [\[Linux\] 하드웨어 인터페이스 · 인터럽트 · 플랫폼 드라이버](./TIL/2026/10/2026-10-01_%5BLinux%5D_%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4_%C2%B7_%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8_%C2%B7_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
 
 <details>
