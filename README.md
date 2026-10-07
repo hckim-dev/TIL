@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.07** | 🔗 [\[FPGA\] Vivado 설계 흐름과 Adder · 순차회로 기초](./TIL/2026/10/2026-10-07_%5BFPGA%5D_Vivado_%EC%84%A4%EA%B3%84_%ED%9D%90%EB%A6%84%EA%B3%BC_Adder_%C2%B7_%EC%88%9C%EC%B0%A8%ED%9A%8C%EB%A1%9C_%EA%B8%B0%EC%B4%88.md)
 - 🗓️ **2026.10.06** | 🔗 [\[FPGA\] FPGA 기초 개념과 디지털 회로 설계 흐름](./TIL/2026/10/2026-10-06_%5BFPGA%5D_FPGA_%EA%B8%B0%EC%B4%88_%EA%B0%9C%EB%85%90%EA%B3%BC_%EB%94%94%EC%A7%80%ED%84%B8_%ED%9A%8C%EB%A1%9C_%EC%84%A4%EA%B3%84_%ED%9D%90%EB%A6%84.md)
 - 🗓️ **2026.10.03** | 🔗 [\[Linux\] 전체 학습 흐름 및 핵심 구조](./TIL/2026/10/2026-10-03_%5BLinux%5D_%EC%A0%84%EC%B2%B4_%ED%95%99%EC%8A%B5_%ED%9D%90%EB%A6%84_%EB%B0%8F_%ED%95%B5%EC%8B%AC_%EA%B5%AC%EC%A1%B0.md)
 - 🗓️ **2026.10.02** | 🔗 [\[Linux\] 디바이스 트리와 플랫폼 드라이버](./TIL/2026/10/2026-10-02_%5BLinux%5D_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%ED%8A%B8%EB%A6%AC%EC%99%80_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
