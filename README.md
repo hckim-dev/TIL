@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.15** | 🔗 [asdasd](./TIL/2026/10/2026-10-15_asdasd.md)
 - 🗓️ **2026.10.14** | 🔗 [\[FPGA\] Verilog HDL 기본 문법과 조합·순차논리회로](./TIL/2026/10/2026-10-14_%5BFPGA%5D_Verilog_HDL_%EA%B8%B0%EB%B3%B8_%EB%AC%B8%EB%B2%95%EA%B3%BC_%EC%A1%B0%ED%95%A9%C2%B7%EC%88%9C%EC%B0%A8%EB%85%BC%EB%A6%AC%ED%9A%8C%EB%A1%9C.md)
 - 🗓️ **2026.10.14** | 🔗 [\[FPGA\] Verilog 연산자와 주요 문법 정리](./TIL/2026/10/2026-10-14_%5BFPGA%5D_Verilog_%EC%97%B0%EC%82%B0%EC%9E%90%EC%99%80_%EC%A3%BC%EC%9A%94_%EB%AC%B8%EB%B2%95_%EC%A0%95%EB%A6%AC.md)
 - 🗓️ **2026.10.07** | 🔗 [\[FPGA\] Vivado 설계 흐름과 Adder · 순차회로 기초](./TIL/2026/10/2026-10-07_%5BFPGA%5D_Vivado_%EC%84%A4%EA%B3%84_%ED%9D%90%EB%A6%84%EA%B3%BC_Adder_%C2%B7_%EC%88%9C%EC%B0%A8%ED%9A%8C%EB%A1%9C_%EA%B8%B0%EC%B4%88.md)
