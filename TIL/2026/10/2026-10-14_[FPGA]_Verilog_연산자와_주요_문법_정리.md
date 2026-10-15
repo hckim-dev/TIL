@@ -12,8 +12,6 @@
 
 # \[FPGA\] Verilog 추가 문법 정리
 
-기존에 정리한 `wire/reg`, `assign`, `always`, 조합·순차논리, Blocking/Non-blocking, Test Bench 등은 제외하고 **앞으로 코드에서 자주 보게 될 문법 위주**로 정리.
-
 <a id="notion-3f91d46c18fc80f8a56bdeeecb171e00"></a>
 
 ## 연산자 구분

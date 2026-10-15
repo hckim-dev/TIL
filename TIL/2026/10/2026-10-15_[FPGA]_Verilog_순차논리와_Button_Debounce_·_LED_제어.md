@@ -1,10 +1,10 @@
-# asdasd
+# \[FPGA\] Verilog 순차논리와 Button Debounce · LED 제어
 
 > 날짜: 2026-10-15
-> 원본 노션: [링크](https://app.notion.com/p/asdasd-3fa1d46c18fc80f18afcf7a20e4973e8)
+> 원본 노션: [링크](https://app.notion.com/p/FPGA-Verilog-Button-Debounce-LED-3fa1d46c18fc80f18afcf7a20e4973e8)
 
 <!-- notion-page-id: 3fa1d46c18fc80f18afcf7a20e4973e8 -->
-<!-- notion-title: "asdasd" -->
+<!-- notion-title: "[FPGA] Verilog 순차논리와 Button Debounce · LED 제어" -->
 
 ---
 
