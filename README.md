@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.16** | 🔗 [\[FPGA\] Button Debounce 시뮬레이션과 LED Shift 제어](./TIL/2026/10/2026-10-16_%5BFPGA%5D_Button_Debounce_%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%EC%85%98%EA%B3%BC_LED_Shift_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.15** | 🔗 [\[FPGA\] Verilog 순차논리와 Button Debounce · LED 제어](./TIL/2026/10/2026-10-15_%5BFPGA%5D_Verilog_%EC%88%9C%EC%B0%A8%EB%85%BC%EB%A6%AC%EC%99%80_Button_Debounce_%C2%B7_LED_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.14** | 🔗 [\[FPGA\] Verilog HDL 기본 문법과 조합·순차논리회로](./TIL/2026/10/2026-10-14_%5BFPGA%5D_Verilog_HDL_%EA%B8%B0%EB%B3%B8_%EB%AC%B8%EB%B2%95%EA%B3%BC_%EC%A1%B0%ED%95%A9%C2%B7%EC%88%9C%EC%B0%A8%EB%85%BC%EB%A6%AC%ED%9A%8C%EB%A1%9C.md)
 - 🗓️ **2026.10.14** | 🔗 [\[FPGA\] Verilog 연산자와 주요 문법 정리](./TIL/2026/10/2026-10-14_%5BFPGA%5D_Verilog_%EC%97%B0%EC%82%B0%EC%9E%90%EC%99%80_%EC%A3%BC%EC%9A%94_%EB%AC%B8%EB%B2%95_%EC%A0%95%EB%A6%AC.md)
