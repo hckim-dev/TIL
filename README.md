@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.20** | 🔗 [\[FPGA\] Setup Time · Hold Time과 2단 동기화기](./TIL/2026/10/2026-10-20_%5BFPGA%5D_Setup_Time_%C2%B7_Hold_Time%EA%B3%BC_2%EB%8B%A8_%EB%8F%99%EA%B8%B0%ED%99%94%EA%B8%B0.md)
 - 🗓️ **2026.10.19** | 🔗 [\[FPGA\] FSM과 Moore · Mealy FSM](./TIL/2026/10/2026-10-19_%5BFPGA%5D_FSM%EA%B3%BC_Moore_%C2%B7_Mealy_FSM.md)
 - 🗓️ **2026.10.16** | 🔗 [\[FPGA\] Button Debounce 시뮬레이션과 LED Shift 제어](./TIL/2026/10/2026-10-16_%5BFPGA%5D_Button_Debounce_%EC%8B%9C%EB%AE%AC%EB%A0%88%EC%9D%B4%EC%85%98%EA%B3%BC_LED_Shift_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.15** | 🔗 [\[FPGA\] Verilog 순차논리와 Button Debounce · LED 제어](./TIL/2026/10/2026-10-15_%5BFPGA%5D_Verilog_%EC%88%9C%EC%B0%A8%EB%85%BC%EB%A6%AC%EC%99%80_Button_Debounce_%C2%B7_LED_%EC%A0%9C%EC%96%B4.md)
