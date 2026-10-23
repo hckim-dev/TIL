@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.23** | 🔗 [\[FPGA\] PWM을 이용한 DC Motor 제어](./TIL/2026/10/2026-10-23_%5BFPGA%5D_PWM%EC%9D%84_%EC%9D%B4%EC%9A%A9%ED%95%9C_DC_Motor_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.21** | 🔗 [\[FPGA\] Shift Register와 FSM을 이용한 1010111 Pattern Detector](./TIL/2026/10/2026-10-21_%5BFPGA%5D_Shift_Register%EC%99%80_FSM%EC%9D%84_%EC%9D%B4%EC%9A%A9%ED%95%9C_1010111_Pattern_Detector.md)
 - 🗓️ **2026.10.20** | 🔗 [\[FPGA\] Setup Time · Hold Time과 2단 동기화기](./TIL/2026/10/2026-10-20_%5BFPGA%5D_Setup_Time_%C2%B7_Hold_Time%EA%B3%BC_2%EB%8B%A8_%EB%8F%99%EA%B8%B0%ED%99%94%EA%B8%B0.md)
 - 🗓️ **2026.10.19** | 🔗 [\[FPGA\] FSM과 Moore · Mealy FSM](./TIL/2026/10/2026-10-19_%5BFPGA%5D_FSM%EA%B3%BC_Moore_%C2%B7_Mealy_FSM.md)
