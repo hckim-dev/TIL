@@ -14,6 +14,7 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 10월
 
+- 🗓️ **2026.10.27** | 🔗 [\[FPGA\] Rotary Encoder](./TIL/2026/10/2026-10-27_%5BFPGA%5D_Rotary_Encoder.md)
 - 🗓️ **2026.10.26** | 🔗 [\[FPGA\] PWM을 이용한 Piezo Buzzer 제어](./TIL/2026/10/2026-10-26_%5BFPGA%5D_PWM%EC%9D%84_%EC%9D%B4%EC%9A%A9%ED%95%9C_Piezo_Buzzer_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.23** | 🔗 [\[FPGA\] PWM을 이용한 DC Motor 제어](./TIL/2026/10/2026-10-23_%5BFPGA%5D_PWM%EC%9D%84_%EC%9D%B4%EC%9A%A9%ED%95%9C_DC_Motor_%EC%A0%9C%EC%96%B4.md)
 - 🗓️ **2026.10.21** | 🔗 [\[FPGA\] Shift Register와 FSM을 이용한 1010111 Pattern Detector](./TIL/2026/10/2026-10-21_%5BFPGA%5D_Shift_Register%EC%99%80_FSM%EC%9D%84_%EC%9D%B4%EC%9A%A9%ED%95%9C_1010111_Pattern_Detector.md)
