@@ -12,7 +12,12 @@
 ## 📚 TIL 기록 목록
 
 <!-- TIL_LIST_START -->
-### 💡 2026년 10월
+### 💡 2026년 11월
+
+- 🗓️ **2026.11.12** | 🔗 [\[RTOS\] FreeRTOS 핵심 정리](./TIL/2026/11/2026-11-12_%5BRTOS%5D_FreeRTOS_%ED%95%B5%EC%8B%AC_%EC%A0%95%EB%A6%AC.md)
+
+<details>
+<summary>📂 2026년 10월 (16개의 기록)</summary>
 
 - 🗓️ **2026.10.30** | 🔗 [\[FPGA\] UART](./TIL/2026/10/2026-10-30_%5BFPGA%5D_UART.md)
 - 🗓️ **2026.10.27** | 🔗 [\[FPGA\] Rotary Encoder](./TIL/2026/10/2026-10-27_%5BFPGA%5D_Rotary_Encoder.md)
@@ -30,6 +35,8 @@
 - 🗓️ **2026.10.03** | 🔗 [\[Linux\] 전체 학습 흐름 및 핵심 구조](./TIL/2026/10/2026-10-03_%5BLinux%5D_%EC%A0%84%EC%B2%B4_%ED%95%99%EC%8A%B5_%ED%9D%90%EB%A6%84_%EB%B0%8F_%ED%95%B5%EC%8B%AC_%EA%B5%AC%EC%A1%B0.md)
 - 🗓️ **2026.10.02** | 🔗 [\[Linux\] 디바이스 트리와 플랫폼 드라이버](./TIL/2026/10/2026-10-02_%5BLinux%5D_%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_%ED%8A%B8%EB%A6%AC%EC%99%80_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
 - 🗓️ **2026.10.01** | 🔗 [\[Linux\] 하드웨어 인터페이스 · 인터럽트 · 플랫폼 드라이버](./TIL/2026/10/2026-10-01_%5BLinux%5D_%ED%95%98%EB%93%9C%EC%9B%A8%EC%96%B4_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4_%C2%B7_%EC%9D%B8%ED%84%B0%EB%9F%BD%ED%8A%B8_%C2%B7_%ED%94%8C%EB%9E%AB%ED%8F%BC_%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B2%84.md)
+
+</details>
 
 <details>
 <summary>📂 2026년 09월 (8개의 기록)</summary>
