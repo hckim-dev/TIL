@@ -14,7 +14,8 @@
 <!-- TIL_LIST_START -->
 ### 💡 2026년 11월
 
-- 🗓️ **2026.11.12** | 🔗 [\[RTOS\] FreeRTOS 핵심 정리](./TIL/2026/11/2026-11-12_%5BRTOS%5D_FreeRTOS_%ED%95%B5%EC%8B%AC_%EC%A0%95%EB%A6%AC.md)
+- 🗓️ **2026.11.13** | 🔗 [\[RTOS\] FreeRTOS 통신·동기화·디버깅](./TIL/2026/11/2026-11-13_%5BRTOS%5D_FreeRTOS_%ED%86%B5%EC%8B%A0%C2%B7%EB%8F%99%EA%B8%B0%ED%99%94%C2%B7%EB%94%94%EB%B2%84%EA%B9%85.md)
+- 🗓️ **2026.11.12** | 🔗 [\[RTOS\] FreeRTOS 기초·태스크·스케줄링](./TIL/2026/11/2026-11-12_%5BRTOS%5D_FreeRTOS_%EA%B8%B0%EC%B4%88%C2%B7%ED%83%9C%EC%8A%A4%ED%81%AC%C2%B7%EC%8A%A4%EC%BC%80%EC%A4%84%EB%A7%81.md)
 
 <details>
 <summary>📂 2026년 10월 (16개의 기록)</summary>
